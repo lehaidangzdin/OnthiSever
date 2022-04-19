@@ -18,20 +18,20 @@ var storage = multer.diskStorage({
         cb(null, './public/images/')
     },
     filename: function (req, file, cb) {
-        nameImage = Date.now() + ".jpg";
+        nameImage = Date.now() + ".png";
         cb(null, nameImage);
     },
     limits: {
-        fileSize: 1024 * 200,
+        fileSize: 1024 * 1024 *2,
         files: 2,
     }
 });
 
 function fileFilter(req, file, cb) {
-    if (file.mimetype === 'image/jpeg') {
+    if (file.mimetype === 'image/png') {
         cb(null, true)
     } else {
-        cb(new Error('K phai duoi jpg!'));
+        cb(new Error('K phai duoi png!'));
     }
 }
 
@@ -42,21 +42,25 @@ mongoose.connect(db).catch(err => {
 });
 // khai bao Schema
 const DbOnTap = new mongoose.Schema({
-    _id: "string", _email: "string", _diaChi: "string", _khoa: "string", _image: "Array"
+    _tieuDe: "string", _noiDung: "string", _ngayNhap: "string", _image: "Array"
 });
-const student = mongoose.model("Student", DbOnTap);
+const SanPham = mongoose.model("SanPhams", DbOnTap);
 /* GET home page. */
-router.get('/', function (req, res, next) {
-    res.render('index', {title: 'No', message: ""});
-    // res.render('submit', { title: 'No' });
+// router.get('/', function (req, res, next) {
+//     res.render('index', {title: 'No', message: ""});
+//     // res.render('submit', { title: 'No' });
+// });
+router.get('/Add', function (req, res, next) {
+    res.render('Add', {title: 'Add', message: ""});
 });
 /* GET list page. */
-router.get('/List', function (req, res, next) {
-    student.find({}, function (err, data) {
+router.get('/', function (req, res, next) {
+    SanPham.find({}, function (err, data) {
         if (err == null) {
-            res.render('ListAll', {title: 'ListAll', data: data});
+            res.render('index', {title: 'Home', data: data});
         } else {
             console.log(err.message);
+            res.render('index', {title: 'Home', data: null});
         }
     })
 });
@@ -68,9 +72,9 @@ router.get('/update', function (req, res, next) {
 //
 router.post('/Update', function (req, res, next) {
     let _id = req.body.id;
-    student.findOne({_id: _id}, function (err, data) {
+    SanPham.findOne({_id: _id}, function (err, data) {
             if (err == null) {
-                res.render('update', {title: 'Update333', data: data});
+                res.render('update', {title: 'Update', data: data});
             } else {
                 res.send(err.message);
             }
@@ -80,37 +84,24 @@ router.post('/Update', function (req, res, next) {
 });
 // add student if suscces go to ListAll page
 router.post('/Add', upload.array("profile_pic", 2), function (req, res, next) {
-    let _id = req.body.id;
-    let _email = req.body.email;
-    let _diaChi = req.body.diaChi;
-    let _khoa = req.body.khoa;
+    let _tieuDe = req.body.tieuDe;
+    let _noiDung = req.body.noiDung;
+    let _ngayNhap = req.body.ngayNhap;
     let _file = req.files;
     let _namefile = [];
     // console.log(_file);
     // ==========validate
-    if (!_id) {
-        const err = new Error("Chua nhap id!");
+    if (!_tieuDe) {
+        const err = new Error("Chua nhap tieu de!");
         return next(err);
-    } else {
-        student.findOne({_id: _id}, function (err, data) {
-            if (data != null) {
-                const err = new Error("ID da ton tai!");
-                return next(err);
-            }
-
-        })
     }
     //
-    if (!_email) {
-        const err = new Error("Chua nhap email!");
+    if (!_noiDung) {
+        const err = new Error("Chua nhap noi dung!");
         return next(err);
     }
-    if (!_diaChi) {
-        const err = new Error("Chua nhap dia chi!");
-        return next(err);
-    }
-    if (!_khoa) {
-        const err = new Error("Chua nhap khoa!");
+    if (!_ngayNhap) {
+        const err = new Error("Chua nhap ngay nhap!");
         return next(err);
     }
     //
@@ -122,15 +113,15 @@ router.post('/Add', upload.array("profile_pic", 2), function (req, res, next) {
         const err = new Error("Chua chon file!");
         return next(err);
     } else {
-        const data = new student({
-            _id: _id, _email: _email, _diaChi: _diaChi, _khoa: _khoa, _image: _namefile
+        const data = new SanPham({
+            _tieuDe: _tieuDe, _noiDung: _noiDung, _ngayNhap: _ngayNhap, _image: _namefile
         });
         data.save(function (err) {
             if (err == null) {
                 // res.render('index', {title: 'ListAll', message: mess});
-                res.redirect("/List");
+                res.redirect("/");
             } else {
-                res.render("index", {title: "Add", message: err.message});
+                res.render("Add", {title: "Add", message: err.message});
             }
         })
     }
@@ -139,7 +130,7 @@ router.post('/Add', upload.array("profile_pic", 2), function (req, res, next) {
 // get student with id
 router.post("/getStudent", function (req, res,) {
     let _id = req.body.id;
-    student.findOne({_id: _id}, function (err, data) {
+    SanPham.findOne({_id: _id}, function (err, data) {
         if (err == null) {
             res.send({
                 trangThai: 0, data: data
@@ -155,7 +146,7 @@ router.post("/getStudent", function (req, res,) {
 // delete student
 router.post("/delete", function (req, res,) {
     let _id = req.body.id;
-    student.deleteOne({_id: _id}, function (err) {
+    SanPham.deleteOne({_id: _id}, function (err) {
         if (err == null) {
             res.send({
                 trangThai: 0
@@ -171,9 +162,9 @@ router.post("/delete", function (req, res,) {
 // update student
 router.post("/updateStudent", upload.array("profile_pic", 2), function (req, res,) {
     let _id = req.body.id;
-    let _email = req.body.email;
-    let _diaChi = req.body.diaChi;
-    let _khoa = req.body.khoa;
+    let _tieuDe = req.body.tieuDe;
+    let _noiDung = req.body.noiDung;
+    let _ngayNhap = req.body.ngayNhap;
     let _file = req.files;
     let _namefile = [];
     //
@@ -196,7 +187,12 @@ router.post("/updateStudent", upload.array("profile_pic", 2), function (req, res
     for (let i = 0; i < _file.length; i++) {
         _namefile.push(_file[i].filename);
     }
-    student.updateOne({_id: _id}, {_email: _email, _diaChi: _diaChi, _khoa: _khoa, _image: _namefile}, function (err) {
+    SanPham.updateOne({_id: _id}, {
+        _tieuDe: _tieuDe,
+        _noiDung: _noiDung,
+        _ngayNhap: _ngayNhap,
+        _image: _namefile
+    }, function (err) {
         if (err == null) {
             res.redirect("/List");
         } else {
@@ -208,11 +204,11 @@ router.post("/updateStudent", upload.array("profile_pic", 2), function (req, res
 })
 // search
 router.post("/Find", function (req, res,) {
-    let _id = req.body.timKiem;
-    student.findOne({_id: _id}, function (err, data) {
+    let _ngayNhap = req.body.timKiem;
+    SanPham.findOne({_ngayNhap: _ngayNhap}, function (err, data) {
         if (err == null) {
             if (data == null) {
-                res.render("Find", {title: "Find", data: null, message: "K tim thay!"});
+                res.render("Find", {title: "Find", data: null, message: "K tim thay san pham!"});
             } else {
                 res.render("Find", {title: "Find", data: data, message: "Da tim thay!"});
             }

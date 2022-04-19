@@ -13,9 +13,9 @@
     <% if (data != null){ %>
         <div class="item">
             <p><strong>ID: </strong><%= data._id %></p>
-            <p><strong>Email:</strong> <%= data._email %></p>
-            <p><strong>Dia chi:</strong><%= data._diaChi %></p>
-            <p><strong>Khoa:</strong> <%= data._khoa %></p>
+            <p><strong>Email:</strong> <%= data._tieuDe %></p>
+            <p><strong>Dia chi:</strong><%= data._noiDung %></p>
+            <p><strong>Khoa:</strong> <%= data._ngayNhap %></p>
             <% for(var j = 0; j < data._image.length;j++) { %>
                 <img class="img" src="images/<%= data._image[j] %>">
             <% } %>
