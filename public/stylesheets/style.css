@@ -1,0 +1,49 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.buttonUpdate {
+    width: 110px;
+    height: 40px;
+    background: #00B7FF;
+    color: white;
+    border-radius: 6px;
+    border-width: 0px
+}
+
+.btnListAll {
+    margin: 3px;
+    width: 50px;
+    height: 30px;
+    background: limegreen;
+    color: white;
+    border-radius: 6px;
+    border-width: 0px
+}
+.imgListAll{
+    width: 45%;
+    height: 400px;
+}
+
+.txtMess {
+    font-size: 28px;
+    color: limegreen;
+    margin-left: 10px;
+}
+
+.img {
+    width: 300px;
+    height: 200px;
+    margin: 5px;
+}
+.item{
+    border: 1px solid black;
+    border-radius:10px ;
+    padding: 10px;
+    margin: 10px;
+}

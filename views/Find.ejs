@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+<div class="txtMess"><%= message %></div>
+<div>
+    <% if (data != null){ %>
+        <div class="item">
+            <p><strong>ID: </strong><%= data._id %></p>
+            <p><strong>Email:</strong> <%= data._email %></p>
+            <p><strong>Dia chi:</strong><%= data._diaChi %></p>
+            <p><strong>Khoa:</strong> <%= data._khoa %></p>
+            <% for(var j = 0; j < data._image.length;j++) { %>
+                <img class="img" src="images/<%= data._image[j] %>">
+            <% } %>
+        </div>
+    <% } %>
+</div>
+
+</body>
+</html>
